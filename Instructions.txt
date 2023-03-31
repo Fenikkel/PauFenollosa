@@ -1,0 +1,23 @@
+	Tutorial: https://www.patrykgalach.com/2020/04/20/unity-webgl-template/
+	Repo example: https://bitbucket.org/gaello/unity-webgl-template/src/master/Assets/WebGLTemplates/MyCustomTemplate/
+	
+	- The Background color can be #000 or #111
+
+	- The other variables can be "false" or "true" (without commas)
+
+	- Uncommend and commend to change the configuration		
+
+					// Responsive fixed resolution
+					/*
+					w = {{{ WIDTH }}};
+					h = {{{ HEIGHT }}};
+					*/
+
+					// Responsive free aspect resolution
+					w = window.innerWidth;
+					h = window.innerHeight;
+
+	- If  "fixed resolution = false", change this options in Canvas Scaler -> Screen Match mode (while using the game view in free aspect ):
+		+ Expand
+		+ Match width or Height (0 / 0.5 / 1)
+		+ Shrink
