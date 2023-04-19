@@ -1,0 +1,108 @@
+
+
+    /*** ANIMATIONS ***/
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+
+    /**** STYLES ***/
+/* 
+  Selector '*' is used to select all elements in the HTML document. 
+  The next code sets all margins and padding of all elements in the HTML document to zero, including the <html> and <body> elements. 
+  This rule is commonly used as a CSS normalization technique, to establish a consistent baseline for the layout and appearance of elements on the page. 
+  By removing default margins and padding, it ensures that elements behave consistently across different browsers and devices.
+*/
+  * {
+  padding: 0;
+  margin: 0;
+  }
+
+  html {
+    height: -webkit-fill-available; /* fix mobile viewport menu bar on iOS */
+  }
+
+  body {
+    height: 100%;
+    height: -webkit-fill-available; /* fix mobile viewport menu bar on iOS */  
+    width: 100%;
+    text-align: center;
+    background-color: #231f20 /* Loading background color */   
+  }
+
+  p {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    color: #ccc;
+    /* text-align: center; */
+    /* line-height: 1.5; */
+  }
+
+  /* Controls how we can see of our game */
+  #unity-canvas {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width:  100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  /* Background and border bar */
+  #unity-loading-bar {
+    position: absolute;
+    left: 30%;
+    top: 50%;
+    width: 40%;
+    height: 10px;
+    background-color: #ff00aa00;
+    border: 2px solid #ccc;
+    /* border-radius: 10px; */
+    opacity: 0;
+    animation: fadeIn 0.75s;
+  }
+
+  /* Fill bar */
+  #unity-progress-bar {
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    width: 1%;
+    height: 100%;
+    background-color: #ccc;
+    /* border-radius: 10px; */
+    transition: 400ms linear;
+  }
+
+  #secondary-text-div {
+    position: absolute;
+    left: 30%;
+    top: 65%;
+    width: 40%;
+    height: 40px;
+    background-color: #ff00ee00;
+    border: 2px solid #ccc;
+    /* border-radius: 10px; */
+    opacity: 0;
+    animation: fadeIn 0.75s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
