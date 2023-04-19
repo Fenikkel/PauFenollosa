@@ -2,119 +2,105 @@
 <html lang="en-us">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>WebPorfolio</title>
-	<style>
-		html,
-		body {
-			background: #000;
-			width: 100%;
-			height: 100%;
-			overflow: visible;
-			padding: 0;
-			margin: 0;
-		}
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WebPorfolio</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
 
-		div#gameContainer {
-			background: transparent !important;
-			position: absolute;
-		}
+    html {
+      /* fix mobile viewport menu bar on iOS */
+      height: -webkit-fill-available;
+    }
 
-		div#gameContainer canvas {
-			position: absolute;
-		}
+    body {
+      height: 100%;
+      /* fix mobile viewport menu bar on iOS */
+      height: -webkit-fill-available;
+      width: 100%;
+      text-align: center;
+    }
 
-		div#gameContainer canvas[data-pixel-art="true"] {
-			position: absolute;
-			image-rendering: optimizeSpeed;
-			image-rendering: -webkit-crisp-edges;
-			image-rendering: -moz-crisp-edges;
-			image-rendering: -o-crisp-edges;
-			image-rendering: crisp-edges;
-			image-rendering: -webkit-optimize-contrast;
-			image-rendering: optimize-contrast;
-			image-rendering: pixelated;
-			-ms-interpolation-mode: nearest-neighbor;
-		}
-	</style>
+    #unity-canvas {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    #unity-loading-bar {
+      position: absolute;
+      left: 30%;
+      top: 50%;
+      width: 40%;
+      height: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    #unity-progress-bar {
+      position: absolute;
+      left: 0%;
+      top: 0%;
+      width: 1%;
+      height: 100%;
+      background-color: #ccc;
+      border-radius: 10px;
+      transition: 400ms linear;
+    }
+  </style>
 </head>
 
 <body>
-	<div id="gameContainer">
-		<canvas id="unity-canvas" data-pixel-art="false"></canvas>
-		<script src="Build/Minified.loader.js"></script>
-		<script>
-			var canvas = document.querySelector("#unity-canvas");
-			var config = {
-				dataUrl: "Build/Minified.data.unityweb",
-				frameworkUrl: "Build/Minified.framework.js.unityweb",
-				codeUrl: "Build/Minified.wasm.unityweb",
-				streamingAssetsUrl: "StreamingAssets",
-				companyName: "Fenikkel",
-				productName: "WebPorfolio",
-				productVersion: "0.1",
-			};
-			var scaleToFit;
-			try {
-				scaleToFit = !!JSON.parse("false"); //SCALE_TO_FIT
-			} catch (e) {
-				scaleToFit = true;
-			}
-			function progressHandler(progress) {
-				var percent = progress * 100 + '%';
-				canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
-				canvas.style.backgroundSize = '100% 1rem';
-			}
-			function onResize() {
-				var container = canvas.parentElement;
-				var w;
-				var h;
+  <canvas id="unity-canvas"></canvas>
+  <div id="unity-loading-bar">
+    <div id="unity-progress-bar">
+    </div>
+  </div>
+  <script src="Build/v0.1.loader.js"></script>
+  <script>
+    const maxPixelRatioMobile = 2.0;
+    const maxPixelRatioDesktop = 1.5;
 
-				if (scaleToFit) {
-					w = window.innerWidth;
-					h = window.innerHeight;
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var maxDevicePixelRatio = isMobile? maxPixelRatioMobile: maxPixelRatioDesktop;
+    var pixelRatio = Math.min(window.devicePixelRatio, maxDevicePixelRatio);
 
-					var r = 600 / 960;
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/v0.1.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/v0.1.data.unityweb",
+      frameworkUrl: buildUrl + "/v0.1.framework.js.unityweb",
+      codeUrl: buildUrl + "/v0.1.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "Fenikkel",
+      productName: "WebPorfolio",
+      productVersion: "0.1",
+      devicePixelRatio: pixelRatio
+    };
 
-					if (w * r > window.innerHeight) {
-						w = Math.min(w, Math.ceil(h / r));
-					}
-					h = Math.floor(w * r);
-				} else {
-					
-					// Responsive fixed resolution
-					/*
-					w = 960;
-					h = 600;
-					*/
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBar = document.querySelector("#unity-progress-bar");
 
-					// Responsive free aspect resolution
-					w = window.innerWidth;
-					h = window.innerHeight;
-				}
-
-				container.style.width = canvas.style.width = w + "px";
-				container.style.height = canvas.style.height = h + "px";
-				container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
-				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
-			}
-			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
-				canvas = instance.Module.canvas;
-				onResize();
-			});
-			window.addEventListener('resize', onResize);
-			onResize();
-
-			if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-				// Mobile device style: fill the whole browser client area with the game canvas:
-				const meta = document.createElement('meta');
-				meta.name = 'viewport';
-				meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-				document.getElementsByTagName('head')[0].appendChild(meta);
-			}
-		</script>
-	</div>
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = function() {
+      createUnityInstance(canvas, config, function(progress) {
+        progressBar.style.width = 100 * progress + "%";
+      }).then(function(unityInstance) {
+        loadingBar.style.display = "none";
+      }).catch(function(message) {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
 </body>
 
 </html>
